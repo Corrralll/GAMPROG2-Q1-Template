@@ -117,6 +117,35 @@ public class InventoryManager : MonoBehaviour
         // If the item is a consumable, simply add the attributes of the item to the player.
         // If it is equippable, get the equipment slot that matches the item's slot.
         // Set the equipment slot's item as that of the used item
+        if (data.type == ItemType.Consumable)
+        {
+            // Add the attributes of the consumable item to the player
+            player.AddAttributes(data.attributes);
+            Debug.Log("Used consumable item: " + data.id);
+        }
+        else if (data.type == ItemType.Equipabble)
+        {
+            EquipmentSlotType slotType = data.slotType;
+            int equipmentSlotIndex = GetEquipmentSlot(slotType);
+
+            if (equipmentSlotIndex != -1)
+            {
+                // Unequip the currently equipped item in the equipment slot
+                equipmentSlots[equipmentSlotIndex].Unequip();
+
+                // Set the item of the equipment slot to the used item
+                equipmentSlots[equipmentSlotIndex].SetItem(data);
+
+                // Apply the attributes of the equipped item to the player
+                player.AddAttributes(data.attributes);
+                Debug.Log("Equipped item: " + data.id);
+            }
+            else
+            {
+                Debug.Log("No available equipment slot for item: " + data.id);
+            }
+        }
+
     }
 
    
